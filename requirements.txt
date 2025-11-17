@@ -1,0 +1,7 @@
+requests
+beautifulsoup4
+lxml
+python-dotenv
+schedule
+yagmail
+sqlite-utils
