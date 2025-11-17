@@ -1,19 +1,22 @@
 import sqlite3
 
-def get_connection():
-    return sqlite3.connect('data.db')
+DB_FILE = "weather_data.db"
+
 
 def init_db():
-    conn = get_connection()
+    conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS weather (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-            price REAL,
+            temperature TEXT,
+            description TEXT,
+            feels_like TEXT,
             url TEXT UNIQUE,
             scraped_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
-    ''')
+    """
+    )
     conn.commit()
     conn.close()

@@ -2,12 +2,13 @@ from playwright.sync_api import sync_playwright
 
 
 def fetch_weather_bug(url: str):
+    """Scrape WeatherBug page for Irwin, CO weather data."""
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)  # turn on for debugging
+        browser = p.chromium.launch(headless=True)  # True for scheduled runs
         page = browser.new_page()
 
         page.goto(url, timeout=60000, wait_until="domcontentloaded")
-        page.wait_for_timeout(2000)  # wait for React to populate elements
+        page.wait_for_timeout(2000)  # wait for JS to populate elements
 
         # Try matching dynamic WeatherBug classes
         try:
