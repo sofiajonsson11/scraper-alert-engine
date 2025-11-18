@@ -11,6 +11,7 @@ URL = "https://www.weatherbug.com/weather-forecast/now/irwin-co-81230"  # Irwin,
 
 def should_alert(data):
     """Example rule: send alert if temperature < 32°F or 'Snow' in description."""
+
     temp_value = "".join(filter(str.isdigit, data["temperature"]))
     if temp_value and int(temp_value) < 32:
         return True
@@ -29,6 +30,7 @@ def run_scraper():
             data["temperature"], data["description"], data["feels_like"], data["url"]
         )
 
+        # Email alert trigger
         if should_alert(data):
             send_email(
                 "Weather Alert for Irwin, CO!",
