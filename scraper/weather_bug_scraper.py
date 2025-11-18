@@ -1,10 +1,10 @@
 from playwright.sync_api import sync_playwright
 
 
-def fetch_weather_bug(url: str):
+def fetch_weather_bug(url: str, retries: int = 3, wait_time: float = 2.0) -> dict:
     """Scrape WeatherBug page for Irwin, CO weather data."""
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)  # True for scheduled runs
+        browser = p.chromium.launch(headless=False)  # True for scheduled runs
         page = browser.new_page()
 
         page.goto(url, timeout=60000, wait_until="domcontentloaded")
