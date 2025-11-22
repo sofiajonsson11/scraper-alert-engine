@@ -1,17 +1,32 @@
-# Virtual environment
-venv/
-
 # Python cache files
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
 
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Local SQLite database
+weather_data.db
+storage/weather_data.db
+
 # Environment variables
 .env
+.env.*
 
-# Logs
-*.log
-
-# VS Code settings (optional)
+# IDE/editor files
 .vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# macOS system files
+.DS_Store
+
+# Other temporary files
+*.tmp
+*.swp
+*.bak
