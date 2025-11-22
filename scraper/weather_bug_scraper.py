@@ -2,7 +2,7 @@ from playwright.sync_api import sync_playwright
 
 
 def fetch_weather_bug(url: str, retries: int = 3, wait_time: float = 2.0) -> dict:
-    """Scrape WeatherBug page for Irwin, CO weather data."""
+    """Scrape WeatherBug page for Crested Butte, CO weather data."""
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)  # True for scheduled runs
         page = browser.new_page()
@@ -37,5 +37,5 @@ def fetch_weather_bug(url: str, retries: int = 3, wait_time: float = 2.0) -> dic
 
 
 if __name__ == "__main__":
-    url = "https://www.weatherbug.com/weather-forecast/now/irwin-co-81230"
+    url = "https://www.weatherbug.com/weather-forecast/now/crested-butte-co-81224"
     print(fetch_weather_bug(url))

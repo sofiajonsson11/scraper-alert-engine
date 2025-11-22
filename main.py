@@ -43,7 +43,7 @@ def run_scraper():
         if should_alert(data):
             logging.info("Alert triggered! Sending email...")
             send_email(
-                "Weather Alert for Irwin, CO!",
+                "Weather Alert for Crested Butte, CO!",
                 f"{data['description']} at {data['temperature']} (Feels like {data['feels_like']})\n{data['url']}",
             )
     else:
