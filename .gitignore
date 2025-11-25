@@ -26,6 +26,9 @@ storage/weather_data.db
 # macOS system files
 .DS_Store
 
+# Logs
+logs/
+
 # Other temporary files
 *.tmp
 *.swp
