@@ -27,17 +27,23 @@ def init_db():
     logging.info("Database initialized.")
 
 
-def save_weather(temperature: str, description: str, feels_like: str, url: str) -> None:
-    """Save a weather record to the database."""
+def save_weather(data: dict):
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
+
+    # Check if URL already exists
+    c.execute("SELECT 1 FROM weather WHERE url=?", (data["url"],))
+    if c.fetchone():
+        conn.close()
+        return False  # Already exists
+
     c.execute(
-        "INSERT OR REPLACE INTO weather (temperature, description, feels_like, url) VALUES (?, ?, ?, ?)",
-        (temperature, description, feels_like, url),
+        "INSERT INTO weather (temperature, description, feels_like, url) VALUES (?, ?, ?, ?)",
+        (data["temperature"], data["description"], data["feels_like"], data["url"]),
     )
     conn.commit()
     conn.close()
-    logging.info(f"Saved weather record: {temperature}, {description}, {feels_like}")
+    return True
 
 
 def get_latest_weather(limit: int = 5):

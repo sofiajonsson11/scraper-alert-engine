@@ -1,7 +1,13 @@
 from scraper.weather_bug_scraper import fetch_weather_bug
 from scraper.rules import should_alert
 from alerts.email_alerts import send_email
-from storage.db import init_db, save_weather, get_last_weather, has_meaningful_change
+from storage.db import (
+    get_latest_weather,
+    init_db,
+    save_weather,
+    get_last_weather,
+    has_meaningful_change,
+)
 import schedule, time, logging, os
 from dotenv import load_dotenv
 
@@ -17,22 +23,41 @@ logging.basicConfig(
 
 def run_scraper():
     logging.info("Running scraper...")
-    data = fetch_weather_bug(TARGET_URL)
 
-    last_record = get_last_weather(TARGET_URL)
-    if has_meaningful_change(data, last_record):
-        save_weather(
-            data["temperature"], data["description"], data["feels_like"], data["url"]
+    try:
+        new_data = fetch_weather_bug(TARGET_URL)
+    except Exception as e:
+        logging.error(f"Error fetching data: {e}")
+        return
+
+    # Get the last saved record from the database
+    last_record = get_latest_weather()  # returns dict or None
+
+    if has_meaningful_change(new_data, last_record):
+        logging.info(
+            f"Meaningful change detected:\nOld: {last_record}\nNew: {new_data}"
         )
-        logging.info(f"New data saved: {data}")
 
-        if should_alert(data):
-            send_email(
-                "Weather Alert",
-                f"{data['description']} at {data['temperature']} (Feels like {data['feels_like']})\n{data['url']}",
-            )
+        # Send email alert first
+        email_sent = send_email(
+            subject=f"Weather Alert for Crested Butte, CO!",
+            message=f"{new_data['description']} at {new_data['temperature']} "
+            f"(Feels like {new_data['feels_like']})\n{new_data['url']}",
+        )
+
+        if email_sent:
+            logging.info("Email alert sent successfully.")
+        else:
+            logging.warning("Email alert failed.")
+
+        # Save new data to the database
+        save_weather(new_data)
+        logging.info(f"New data saved: {new_data}")
+
     else:
-        logging.info("No meaningful change, skipping save and alert.")
+        logging.info("No meaningful change detected, skipping email and save.")
+
+    logging.info("Done scraping.\n")
 
 
 if __name__ == "__main__":
