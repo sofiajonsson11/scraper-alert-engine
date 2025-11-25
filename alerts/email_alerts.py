@@ -51,18 +51,3 @@ def send_email(subject: str, message: str, html: str | None = None) -> bool:
     except Exception as e:
         logging.error(f"Failed to send email: {e}")
         return False
-
-
-# def send_email(subject, message):
-#     msg = MIMEText(message)
-#     msg["Subject"] = subject
-#     msg["From"] = EMAIL
-#     msg["To"] = ALERT_EMAIL
-
-#     try:
-#         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-#             smtp.login(EMAIL, EMAIL_PASSWORD)
-#             smtp.send_message(msg)
-#         print("Email sent successfully.")
-#     except Exception as e:
-#         print(f"Failed to send email: {e}")
