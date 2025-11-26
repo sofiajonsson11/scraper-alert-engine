@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  scraper:
+    build: .
+    container_name: scraper_alert_engine
+    env_file: .env
+    volumes:
+      - ./logs:/app/logs
+      - ./weather_data.db:/app/weather_data.db
+    restart: unless-stopped
