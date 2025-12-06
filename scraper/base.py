@@ -1,30 +1,21 @@
 from abc import ABC, abstractmethod
-import datetime
 
 
 class BaseScraper(ABC):
-    provider: str = "base"
+    """Abstract base class for all weather scrapers."""
+
+    provider = None
+    location = None
+
+    def __init__(self, location: str):
+        self.location = location
 
     @abstractmethod
-    async def fetch(self, page):
-        """Navigate and Fetch HTML content with Playwright"""
-        pass
+    def fetch(self) -> dict:
+        """Fetch, parse, and normalize data. Must return dict with keys: temperature, description, feels_like, url"""
+        raise NotImplementedError
 
     @abstractmethod
-    def parse(self, html: str):
-        """Extract raw fields from HTML content"""
+    def normalize(self, raw_data: dict) -> dict:
+        """Normalize raw scraped data."""
         pass
-
-    @abstractmethod
-    def normalize(self, parsed):
-        """Convert parsed fields to a standard dictionary format"""
-        pass
-
-    async def run(self, page):
-        """Full scraping process: fetch, parse, normalize"""
-        html = await self.fetch(page)
-        parsed = self.parse(html)
-        normalized = self.normalize(parsed)
-        normalized["timestamp"] = datetime.utcnow().isoformat()
-        normalized["provider"] = self.provider
-        return normalized
